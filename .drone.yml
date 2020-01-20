@@ -1,0 +1,26 @@
+kind: pipeline
+name: default
+steps:
+
+  - name: wait
+    image: alpine
+    commands:
+      - sleep 25
+
+  - name: install
+    image: beamaustralia/php:7.3.6
+    commands:
+      - composer install --prefer-dist
+      - composer dump-autoload --optimize
+
+  - name: test
+    image: beamaustralia/php:7.3.6
+    commands:
+      - vendor/bin/phpunit
+
+services:
+  - name: service-database
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 123_SLEEPY_LIL_RABBITS
+      MYSQL_DATABASE: wordpress_tests

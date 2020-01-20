@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+docker run -it --rm \
+	-v "$PWD":/usr/src \
+	-w /usr/src \
+	beamaustralia/php:7.4.0 \
+	composer $@
+
