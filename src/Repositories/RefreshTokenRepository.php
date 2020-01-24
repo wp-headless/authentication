@@ -1,7 +1,8 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Repositories;
+namespace WPHeadless\Auth\Repositories;
 
+use WPHeadless\Auth\Models\RefreshToken;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
@@ -13,7 +14,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function getNewRefreshToken()
     {
-
+        return new RefreshToken;
     }
 
     /**
@@ -22,7 +23,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-
+        $refreshTokenEntity->save();
     }
 
     /**
@@ -30,7 +31,9 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-
+        if ($token = RefreshToken::getById($tokenId)) {
+            $token->revoke();
+        }          
     }
 
     /**
@@ -39,6 +42,10 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
+        if ($token = RefreshToken::getById($tokenId)) {
+            return $token->isRevoked();
+        }
 
+        return true;
     }
 }

@@ -1,8 +1,8 @@
 {
-    "name": "wp-headless/authentication",
+    "name": "wp-headless/auth",
     "type": "library",
     "description": "Wordpress JWT Authentication for JSON API",
-    "homepage": "https://github.com/wp-headless/authentication",
+    "homepage": "https://github.com/wp-headless/auth",
     "keywords": [
         "wordpresss",
         "API",
@@ -21,9 +21,10 @@
     "require": {
         "fzaninotto/faker": "^1.8",
         "illuminate/support": "^5.8",
+        "inpsyde/wpsr7": "^1.0",
         "league/oauth2-server": "^8.0",
+        "papertower/wp-rest-api-psr7": "^0.8.0",
         "paragonie/easydb": "^2",
-        "php-di/php-di": "^6.0",
         "phpseclib/phpseclib": "^2.0",
         "tightenco/collect": "^5.8"
     },
@@ -35,12 +36,13 @@
     },
     "autoload": {
         "psr-4": {
-            "WPHeadless\\JWTAuth\\": "src/"
+            "WPHeadless\\Auth\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Fixtures\\": "tests/__fixtures__/"
         }
     },
     "scripts": {

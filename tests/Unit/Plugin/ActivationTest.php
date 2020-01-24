@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Plugin;
+namespace Tests\Unit\Plugin;
 
 use Mockery;
-use WPHeadless\JWTAuth\Plugin;
-use WPHeadless\JWTAuth\Services\Keys;
-use WPHeadless\JWTAuth\Services\Database;
-use WPHeadless\JWTAuth\Services\PasswordClient;
+use WPHeadless\Auth\Plugin;
+use WPHeadless\Auth\Services\Keys;
+use WPHeadless\Auth\Services\Database;
+use WPHeadless\Auth\Services\PasswordClient;
 
 class ActivtionTest extends \Tests\TestCase
 {

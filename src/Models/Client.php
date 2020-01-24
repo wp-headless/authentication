@@ -1,6 +1,6 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Models;
+namespace WPHeadless\Auth\Models;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;

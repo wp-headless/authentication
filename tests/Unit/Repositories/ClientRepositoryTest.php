@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Repositories;
+namespace Tests\Unit\Repositories;
 
-use WPHeadless\JWTAuth\Repositories\ClientRepository;
-use WPHeadless\JWTAuth\Services\PasswordClient;
+use WPHeadless\Auth\Repositories\ClientRepository;
+use WPHeadless\Auth\Services\PasswordClient;
 
-class ClientRepository1Test extends \Tests\TestCase
+class ClientRepositoryTest extends \Tests\TestCase
 {
     public function test_it_returns_a_client_entity()
     {

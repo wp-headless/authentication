@@ -1,6 +1,6 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Services;
+namespace WPHeadless\Auth\Services;
 
 use PDOException;
 use ParagonIE\EasyDB\Factory;
@@ -47,14 +47,13 @@ class Database
         $collate = $wpdb->get_charset_collate();
 
         return [
-            static::getTokenTable() => "
-                CREATE TABLE ".static::getTokenTable()." (
+            static::getAccessTokenTable() => "
+                CREATE TABLE ".static::getAccessTokenTable()." (
                     id VARCHAR(100) NOT NULL,
                     user_id MEDIUMINT(9),
-                    revoked TINYINT(1),
                     created_at DATETIME,
-                    updated_at DATETIME,
                     expires_at DATETIME,
+                    revoked_at DATETIME,
                     PRIMARY KEY (id),
                     INDEX user_id (user_id)
                 ) $collate;             
@@ -63,8 +62,9 @@ class Database
                 CREATE TABLE ".static::getRefreshTokenTable()." (
                     id VARCHAR(100) NOT NULL,
                     access_token_id VARCHAR(100) NOT NULL,
-                    revoked TINYINT(1),
+                    created_at DATETIME,
                     expires_at DATETIME,
+                    revoked_at DATETIME,
                     PRIMARY KEY (id),
                     INDEX access_token_id (access_token_id)
                 ) $collate;             
@@ -72,7 +72,7 @@ class Database
         ];
     }
 
-    public static function getTokenTable(): string
+    public static function getAccessTokenTable(): string
     {
         global $wpdb;
 

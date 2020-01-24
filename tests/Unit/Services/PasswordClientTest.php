@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Services;
+namespace Tests\Unit\Services;
 
-use WPHeadless\JWTAuth\Services\PasswordClient;
+use WPHeadless\Auth\Services\PasswordClient;
 
 class PasswordClientTest extends \Tests\TestCase
 {
@@ -12,7 +12,7 @@ class PasswordClientTest extends \Tests\TestCase
 
         $service->createSecret();
 
-        $secret = $service->getSecret();
+        $secret = PasswordClient::getSecret();
 
         $this->assertTrue(is_string($secret));
 
@@ -27,7 +27,7 @@ class PasswordClientTest extends \Tests\TestCase
 
         $service->destroySecret();
 
-        $secret = $service->getSecret();
+        $secret = PasswordClient::getSecret();
 
         $this->assertEmpty($secret);
     }       

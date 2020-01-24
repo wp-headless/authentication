@@ -1,8 +1,8 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Repositories;
+namespace WPHeadless\Auth\Repositories;
 
-use WPHeadless\JWTAuth\Models\User;
+use WPHeadless\Auth\Models\User;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;

@@ -1,9 +1,8 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Services;
+namespace WPHeadless\Auth\Services;
 
 use Illuminate\Support\Arr;
-use WPHeadless\JWTAuth\JWTAuth;
 use phpseclib\Crypt\RSA;
 
 class Keys
@@ -13,38 +12,55 @@ class Keys
      */
     protected $rsa;
 
+    /**
+     * @var string
+     */
+    protected static $encryptionKeyStore = 'wp-headless:auth:key';
+
     public function __construct()
     {
         $this->rsa = new RSA;
     }
 
-    public static function getKeyPaths(): array
+    public static function keyPath(string $type): string
     {
-        return [
-            'public' => JWTAuth::keyPath('oauth-public.key'),
-            'private' => JWTAuth::keyPath('oauth-private.key'),
-        ];
+        return WPH_AUTH_PLUGIN_PATH . '/' . 'oauth-'.$type.'.key';
     }
 
-    public function generate(): array
+    public static function getEncryptionKey(): string
     {
-        $paths = static::getKeyPaths();
+        return get_option(static::$encryptionKeyStore, '');
+    }    
 
-        $keys = $this->rsa->createKey(4096);
+    public function generate(): void
+    {
+        $this->generateKeyPair();
 
-        file_put_contents($paths['public'], Arr::get($keys, 'publickey'));
-
-        file_put_contents($paths['private'], Arr::get($keys, 'privatekey'));
-
-        return $paths;
+        $this->generateEncryptionKey();
     }
 
     public function destroy(): void
     {
-        $paths = static::getKeyPaths();
+        unlink(static::keyPath('public'));
 
-        unlink($paths['public']);
+        unlink(static::keyPath('private'));  
 
-        unlink($paths['private']);  
+        delete_option(static::$encryptionKeyStore);
     }    
+
+    protected function generateKeyPair(): void
+    {
+        $keys = $this->rsa->createKey(4096);
+
+        file_put_contents(static::keyPath('public'), Arr::get($keys, 'publickey'));
+
+        file_put_contents(static::keyPath('private'), Arr::get($keys, 'privatekey'));
+    }    
+
+    protected function generateEncryptionKey(): void
+    {
+        $key = base64_encode(random_bytes(32));
+
+        update_option(static::$encryptionKeyStore, $key);
+    }
 }

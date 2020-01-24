@@ -1,33 +1,21 @@
 <?php
 
-namespace Tests\Models;
+namespace Tests\Unit\Models\AccessToken;
 
-use Carbon\Carbon;
+use Tests\RefreshesDatabase;
 use Carbon\CarbonImmutable;
-use WPHeadless\JWTAuth\Services\Database;
-use WPHeadless\JWTAuth\Models\AccessToken;
+use WPHeadless\Auth\Services\Database;
+use WPHeadless\Auth\Models\AccessToken;
 
-class AccessTokenTest extends \Tests\TestCase
+class SaveTokenTest extends \Tests\TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        (new Database)->install();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        (new Database)->uninstall();
-    }
+    use RefreshesDatabase;
 
     public function test_it_can_persist_to_the_db()
     {
         global $wpdb; 
 
-        $table = Database::getTokenTable();
+        $table = Database::getAccessTokenTable();
 
         $numRows = $wpdb->get_var("SELECT COUNT(*) FROM $table");
 
@@ -49,11 +37,10 @@ class AccessTokenTest extends \Tests\TestCase
 
         $this->assertEquals($row, [
             'id' => 'mock-token-id',
-            'user_id' => 123,
-            'revoked' => 0,
+            'user_id' => "123",
             'created_at' => $dateTime->toDateTimeString(),
-            'updated_at' => null,
             'expires_at' => $dateTime->toDateTimeString(),
+            'revoked_at' => null,
         ]);
 
         $numRows = $wpdb->get_var("SELECT COUNT(*) FROM $table");

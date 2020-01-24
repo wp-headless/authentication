@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Models;
+namespace Tests\Unit\Models;
 
-use WPHeadless\JWTAuth\Models\User;
+use WPHeadless\Auth\Models\User;
 
 class UserTest extends \Tests\TestCase
 {

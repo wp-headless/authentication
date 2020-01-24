@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Repositories;
+namespace Tests\Unit\Repositories;
 
 use Mockery;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use WPHeadless\JWTAuth\Repositories\UserRepository;
+use WPHeadless\Auth\Repositories\UserRepository;
 
 class UserRepositoryTest extends \Tests\TestCase
 {

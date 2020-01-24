@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Services;
+namespace Tests\Unit\Services;
 
-use WPHeadless\JWTAuth\Services\Database;
+use WPHeadless\Auth\Services\Database;
 
 class DatabaseTest extends \Tests\TestCase
 {

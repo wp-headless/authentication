@@ -1,10 +1,11 @@
 <?php
 
-namespace WPHeadless\JWTAuth;
+namespace WPHeadless\Auth;
 
-use WPHeadless\JWTAuth\Services\Keys;
-use WPHeadless\JWTAuth\Services\Database;
-use WPHeadless\JWTAuth\Services\PasswordClient;
+use WPHeadless\Auth\Services\Keys;
+use WPHeadless\Auth\Services\Database;
+use WPHeadless\Auth\Services\PasswordClient;
+use WPHeadless\Auth\Http\Controllers;
 
 class Plugin
 {
@@ -31,9 +32,11 @@ class Plugin
 
         $this->passwordClient = $passwordClient;
 
-        register_activation_hook(JWT_AUTH_PLUGIN, [$this, 'activate']);
+        register_activation_hook(WPH_AUTH_PLUGIN, [$this, 'activate']);
 
-        register_deactivation_hook(JWT_AUTH_PLUGIN, [$this, 'deactivate']);
+        register_deactivation_hook(WPH_AUTH_PLUGIN, [$this, 'deactivate']);
+
+        add_action('rest_api_init', [$this, 'registerControllers']);
     }
 
     public function activate(): void
@@ -52,5 +55,10 @@ class Plugin
         $this->database->uninstall();
 
         $this->passwordClient->destroySecret();
-    }    
+    }   
+    
+    public function registerControllers(): void
+    {
+        (new Controllers\AuthorizationController)->register();
+    }      
 }

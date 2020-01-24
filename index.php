@@ -13,20 +13,20 @@
 
 if (!defined('ABSPATH')) exit;
 
-define('JWT_AUTH_PLUGIN', __FILE__);
-define('JWT_AUTH_PLUGIN_PATH', __DIR__);
+define('WPH_AUTH_PLUGIN', __FILE__);
+define('WPH_AUTH_PLUGIN_PATH', __DIR__);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$keys = new \WPHeadless\JWTAuth\Services\Keys; 
+$keys = new \WPHeadless\Auth\Services\Keys; 
 
-$database = new \WPHeadless\JWTAuth\Services\Database; 
+$database = new \WPHeadless\Auth\Services\Database; 
 
-$passwordClient = new \WPHeadless\JWTAuth\Services\PasswordClient; 
+$passwordClient = new \WPHeadless\Auth\Services\PasswordClient; 
 
-$GLOBALS['jwt-auth'] = new \WPHeadless\JWTAuth\Plugin($keys, $database, $passwordClient);
+$GLOBALS['jwt-auth'] = new \WPHeadless\Auth\Plugin($keys, $database, $passwordClient);
 
-function jwtAuth()
+function jwtAuth(): \WPHeadless\Auth\Plugin
 {
     return $GLOBALS['jwt-auth'] ?? null;
 }

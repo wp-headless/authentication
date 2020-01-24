@@ -5,14 +5,13 @@ namespace WPHeadless\Auth\Models;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use WPHeadless\Auth\Services\Database;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class AccessToken implements AccessTokenEntityInterface, Contracts\Token
+class RefreshToken implements RefreshTokenEntityInterface, Contracts\Token
 {
-    use AccessTokenTrait, EntityTrait, TokenEntityTrait, Traits\Token;
+    use RefreshTokenTrait, EntityTrait, Traits\Token;
 
     public function save(): void
     {
@@ -22,11 +21,11 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
 
             $table = static::getTable();
 
-            $format = ['%s', '%d', '%s', '%s'];
+            $format = ['%s', '%s', '%s', '%s'];
 
             $wpdb->insert($table, [
-                'id' => $this->identifier,
-                'user_id' => $this->userIdentifier,
+                'id' => $this->getIdentifier(),
+                'access_token_id' => $this->accessToken->getIdentifier(),
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'expires_at' => Carbon::instance($this->expiryDateTime)->toDateTimeString(),
             ], $format);
@@ -35,7 +34,7 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
 
     public static function hydrate(array $row): Contracts\Token
     {
-        $token = new AccessToken;
+        $token = new RefreshToken;
 
         $token->setIdentifier($row['id']);
 
@@ -43,7 +42,9 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
 
         $token->setExpiryDateTime($expiresAt);
 
-        $token->setUserIdentifier($row['user_id']);
+        if ($accessToken = AccessToken::getById($row['access_token_id'])) {
+            $token->setAccessToken($accessToken);
+        }
 
         foreach ($row as $key => $value) {
             $token->$key = $value;
@@ -54,6 +55,6 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
 
     public static function getTable(): string
     {
-        return Database::getAccessTokenTable();
-    }    
+        return Database::getRefreshTokenTable();
+    }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Repositories;
+namespace WPHeadless\Auth\Repositories;
 
-use WPHeadless\JWTAuth\Models\Client;
-use WPHeadless\JWTAuth\Services\PasswordClient;
+use WPHeadless\Auth\Models\Client;
+use WPHeadless\Auth\Services\PasswordClient;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
@@ -32,17 +32,15 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function validateClient($clientIdentifier, $clientSecret, $grantType)
     {
-        $passwordClient = new PasswordClient;
-
         // As we are only using "password grant clients" 
         // no need to check $clientIdentifier or $grantType
 
         // Mitigates timing attacks
-        return hash_equals($passwordClient->getSecret(), (string) $clientSecret);
+        return hash_equals(PasswordClient::getSecret(), (string) $clientSecret);
     }
 
     private static function getClientName(): string
     {
-        return get_bloginfo('name');
+        return PasswordClient::getName();
     }
 }

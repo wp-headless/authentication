@@ -1,6 +1,6 @@
 <?php
 
-namespace WPHeadless\JWTAuth\Models;
+namespace WPHeadless\Auth\Models;
 
 use WP_User;
 use League\OAuth2\Server\Entities\UserEntityInterface;
