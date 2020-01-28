@@ -4,9 +4,8 @@ namespace WPHeadless\Auth\Http\Controllers;
 
 use WP_REST_Request;
 use WP_REST_Response;
-use WPRestApi\PSR7\WP_REST_PSR7_ServerRequest;
 use WPRestApi\PSR7\WP_REST_PSR7_Response;
-use WPHeadless\Auth\ServerFactory;
+use WPHeadless\Auth\Factories;
 
 class AuthorizationController
 {
@@ -21,13 +20,20 @@ class AuthorizationController
     protected $resource = 'tokens';
 
     /**
-     * @var string
+     * @var Factories\ServerFactory
      */
-    protected $server;
+    protected $serverFactory;
+
+    /**
+     * @var Factories\PasswordRequest
+     */
+    protected $requestFactory;    
 
     public function __construct()
     {
-        $this->server = (new ServerFactory)->makeAuthorizationServer();
+        $this->serverFactory = new Factories\AuthServer;
+
+        $this->requestFactory = new Factories\PasswordRequest;
     }
 
     public function register(): void
@@ -37,6 +43,14 @@ class AuthorizationController
                 'methods'   => 'POST',
                 'callback'  => [$this, 'authorize'],
                 'permission_callback' => [$this, 'permissions'],
+                'args' => [
+                    'username' => [
+                        'required' => true,
+                    ],
+                    'password' => [
+                        'required' => true,
+                    ],
+                ],
             ],
             'schema' => [$this, 'schema'],
         ]);
@@ -76,10 +90,12 @@ class AuthorizationController
 
     public function authorize(WP_REST_Request $request): WP_REST_Response
     {
-        $psrRequest = WP_REST_PSR7_ServerRequest::fromRequest($request);
+        $psrRequest = $this->requestFactory->create($request);
 
-        $response = $this->server->respondToAccessTokenRequest($psrRequest, new WP_REST_PSR7_Response);
+        $server = $this->serverFactory->create();
 
-        dd($response->get_data()->access_token);
+        $response = $server->respondToAccessTokenRequest($psrRequest, new WP_REST_PSR7_Response);
+
+        return rest_ensure_response($response->get_data());
     }
 }

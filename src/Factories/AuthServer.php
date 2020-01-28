@@ -1,16 +1,18 @@
 <?php
 
-namespace WPHeadless\Auth;
+namespace WPHeadless\Auth\Factories;
 
+use WPHeadless\Auth\Auth;
+use WPHeadless\Auth\Config;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use WPHeadless\Auth\Repositories;
 use League\OAuth2\Server\CryptKey;
 use WPHeadless\Auth\Services\Keys;
 
-class ServerFactory
+class AuthServer
 {
-    public function makeAuthorizationServer(): AuthorizationServer
+    public function create(): AuthorizationServer
     {
         $server = $this->initServer();
 
@@ -53,11 +55,7 @@ class ServerFactory
 
     protected function makeCryptKey(string $type): CryptKey
     {
-        $configKey = strtoupper($type) . '_KEY';
-
-        $filePath = 'file://' . Keys::keyPath($type);
-
-        $key = Config::get($configKey, $filePath);
+        $key = Keys::getKey($type);
 
         return new CryptKey($key, null, false);
     }

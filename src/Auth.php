@@ -3,6 +3,8 @@
 namespace WPHeadless\Auth;
 
 use DateInterval;
+use Firebase\JWT\JWT;
+use WPHeadless\Auth\Services\Keys;
 
 class Auth
 {
@@ -18,5 +20,12 @@ class Auth
         $interval = Config::get('ACCESS_TOKEN_EXPIRES', 'P1Y');
 
         return new DateInterval($interval);
-    }    
+    }
+    
+    public static function decode(string $token): array
+    {
+        $publicKey = Keys::getKey('public');
+
+        return (array) JWT::decode($token, $publicKey, ['RS256']);
+    }
 }

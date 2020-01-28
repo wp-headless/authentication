@@ -55,5 +55,5 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
     public static function getTable(): string
     {
         return Database::getAccessTokenTable();
-    }    
+    }
 }

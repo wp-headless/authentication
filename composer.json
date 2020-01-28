@@ -19,6 +19,7 @@
         }
     ],
     "require": {
+        "firebase/php-jwt": "^5.0",
         "fzaninotto/faker": "^1.8",
         "illuminate/support": "^5.8",
         "inpsyde/wpsr7": "^1.0",

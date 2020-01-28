@@ -2,6 +2,7 @@
 
 namespace WPHeadless\Auth\Services;
 
+use WPHeadless\Auth\Config;
 use Illuminate\Support\Arr;
 use phpseclib\Crypt\RSA;
 
@@ -20,6 +21,15 @@ class Keys
     public function __construct()
     {
         $this->rsa = new RSA;
+    }
+
+    public static function getKey(string $type): string
+    {
+        $configKey = strtoupper($type) . '_KEY';
+
+        $filePath = 'file://' . static::keyPath($type);
+
+        return Config::get($configKey, $filePath);
     }
 
     public static function keyPath(string $type): string
