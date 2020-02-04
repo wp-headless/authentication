@@ -10,9 +10,9 @@ use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class AccessToken implements AccessTokenEntityInterface, Contracts\Token
+class AccessToken implements AccessTokenEntityInterface, Contracts\Entity
 {
-    use AccessTokenTrait, EntityTrait, TokenEntityTrait, Traits\Token;
+    use AccessTokenTrait, EntityTrait, TokenEntityTrait, Traits\Entity;
 
     public function save(): void
     {
@@ -33,7 +33,7 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
         }
     }
 
-    public static function hydrate(array $row): Contracts\Token
+    public static function hydrate(array $row): Contracts\Entity
     {
         $token = new AccessToken;
 
@@ -56,4 +56,19 @@ class AccessToken implements AccessTokenEntityInterface, Contracts\Token
     {
         return Database::getAccessTokenTable();
     }
+
+    public static function getByUserId(int $userId): ?Contracts\Entity
+    {
+        global $wpdb;
+
+        $table = static::getTable();
+
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE user_id = %s", $userId);
+
+        if ($row = $wpdb->get_row($query)) {
+            return static::hydrate((array) $row);
+        }
+
+        return null;
+    }     
 }

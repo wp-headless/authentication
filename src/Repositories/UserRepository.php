@@ -3,6 +3,7 @@
 namespace WPHeadless\Auth\Repositories;
 
 use WPHeadless\Auth\Models\User;
+use WPHeadless\Auth\Exceptions\InvalidCredentials;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
@@ -19,9 +20,9 @@ class UserRepository implements UserRepositoryInterface
     public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $clientEntity)
     {
         $user = wp_authenticate($username, $password);
-   
+
         if (is_wp_error($user)) {
-            return null;
+            throw new InvalidCredentials;
         }
 
         return new User($user);

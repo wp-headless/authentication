@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Factories;
 
-use Tests\ActivatesPlugin;
+use Tests\ResetsPlugin;
 use League\OAuth2\Server\AuthorizationServer;
 use WPHeadless\Auth\Factories\AuthServer;
 
 class AuthServerFactory extends \Tests\TestCase
 {
-    use ActivatesPlugin;
+    use ResetsPlugin;
 
     public function test_it_returns_an_auth_server_instance()
     {

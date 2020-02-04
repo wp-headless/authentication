@@ -3,9 +3,9 @@
 namespace WPHeadless\Auth\Models\Traits;
 
 use Carbon\Carbon;
-use WPHeadless\Auth\Models\Contracts\Token as TokenContract;
+use WPHeadless\Auth\Models\Contracts\Entity as EntityContract;
 
-trait Token
+trait Entity
 {
     public function isRevoked(): bool
     {
@@ -34,7 +34,7 @@ trait Token
         }
     }
     
-    public static function getById(string $tokenId): ?TokenContract
+    public static function getById(string $tokenId): ?EntityContract
     {
         global $wpdb;
 
@@ -47,5 +47,30 @@ trait Token
         }
 
         return null;
-    }    
+    }   
+    
+    public function update(array $attributes = []): void
+    {
+        global $wpdb;
+
+        if ($this->identifier) {
+
+            $table = static::getTable();
+
+            $where = ['id' => $this->identifier];
+
+            foreach ($attributes as $key => $value) {
+                if ($value instanceof Carbon) {
+                    $attributes[$key] = $value->toDateTimeString();
+                }
+            }
+
+            $wpdb->update($table, $attributes, $where);
+        }
+    }   
+    
+    public function fresh(): EntityContract
+    {
+        return static::getById($this->identifier);
+    }     
 }

@@ -17,24 +17,8 @@ class DatabaseTest extends \Tests\TestCase
     {
         $this->assertEquals(Database::getTables(), [
             'wp_oauth_access_tokens',
-            'wp_oauth_refresh_tokens'
+            'wp_oauth_refresh_tokens',
+            'wp_oauth_clients',
         ]);
     }   
-    
-    public function test_it_can_install_and_uninstall_tables()
-    {
-        $service = new Database;
-
-        $service->install();
-
-        foreach (Database::getTables() as $name) {
-            $this->assertTrue(Database::tableExists($name));
-        }
-
-        $service->uninstall();
-
-        foreach (Database::getTables() as $name) {
-            $this->assertFalse(Database::tableExists($name));
-        }        
-    }    
 }

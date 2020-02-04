@@ -4,13 +4,10 @@ namespace Tests\Unit\Models\RefreshToken;
 
 use Carbon\Carbon;
 use Tests\Fixtures;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Models\RefreshToken;
 
 class HydrateTokenTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_returns_a_token_model()
     {
         $now = Carbon::now()->setMicroseconds(0);

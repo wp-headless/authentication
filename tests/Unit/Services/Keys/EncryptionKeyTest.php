@@ -2,28 +2,29 @@
 
 namespace Tests\Unit\Services\Keys;
 
+use Tests\ResetsPlugin;
 use WPHeadless\Auth\Services\Keys;
 
 class EncryptionKeyTest extends \Tests\TestCase
 {
+    use ResetsPlugin;
+
     public function test_it_gets_and_sets_encryption_key()
     {
         $service = new Keys;
 
-        $this->assertEquals(Keys::getEncryptionKey(), '');
+        $service->destroy(); // destroy current
+
+        $this->assertTrue(strlen(Keys::getEncryptionKey()) === 0);
 
         $service->generate();
 
         $this->assertTrue(strlen(Keys::getEncryptionKey()) > 40);
-
-        $service->destroy();
     }
 
     public function test_it_destroys_encryption_key()
     {
         $service = new Keys;
-
-        $service->generate();
 
         $this->assertTrue(strlen(Keys::getEncryptionKey()) > 1);
 

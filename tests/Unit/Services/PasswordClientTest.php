@@ -2,10 +2,13 @@
 
 namespace Tests\Unit\Services;
 
+use Tests\ResetsPlugin;
 use WPHeadless\Auth\Services\PasswordClient;
 
 class PasswordClientTest extends \Tests\TestCase
 {
+    use ResetsPlugin;
+    
     public function test_it_creates_a_secret()
     {
         $service = new PasswordClient;

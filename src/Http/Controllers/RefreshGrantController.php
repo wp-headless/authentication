@@ -2,12 +2,15 @@
 
 namespace WPHeadless\Auth\Http\Controllers;
 
+use Exception;
 use WP_REST_Request;
 use WP_REST_Response;
+use WPHeadless\Auth\Exceptions\InvalidCredentials;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use WPRestApi\PSR7\WP_REST_PSR7_Response;
 use WPHeadless\Auth\Factories;
 
-class AuthorizationController
+class RefreshGrantController
 {
     /**
      * @var string
@@ -17,7 +20,7 @@ class AuthorizationController
     /**
      * @var string
      */
-    protected $resource = 'tokens';
+    protected $resource = 'token/refresh';
 
     /**
      * @var Factories\ServerFactory
@@ -25,15 +28,15 @@ class AuthorizationController
     protected $serverFactory;
 
     /**
-     * @var Factories\PasswordRequest
+     * @var Factories\RefreshRequest
      */
-    protected $requestFactory;    
+    protected $requestFactory;
 
     public function __construct()
     {
         $this->serverFactory = new Factories\AuthServer;
 
-        $this->requestFactory = new Factories\PasswordRequest;
+        $this->requestFactory = new Factories\RefreshRequest;
     }
 
     public function register(): void
@@ -42,7 +45,6 @@ class AuthorizationController
             [
                 'methods'   => 'POST',
                 'callback'  => [$this, 'authorize'],
-                'permission_callback' => [$this, 'permissions'],
                 'args' => [
                     'username' => [
                         'required' => true,
@@ -54,11 +56,6 @@ class AuthorizationController
             ],
             'schema' => [$this, 'schema'],
         ]);
-    }
-
-    public function permissions(): bool
-    {
-        return true;
     }
 
     public function schema(): array
@@ -90,12 +87,36 @@ class AuthorizationController
 
     public function authorize(WP_REST_Request $request): WP_REST_Response
     {
-        $psrRequest = $this->requestFactory->create($request);
+        try {
 
-        $server = $this->serverFactory->create();
+            $server = $this->serverFactory->create();
+            
+            $psrRequest = $this->requestFactory->create($request);
 
-        $response = $server->respondToAccessTokenRequest($psrRequest, new WP_REST_PSR7_Response);
+            $psrResponse = new WP_REST_PSR7_Response;
 
-        return rest_ensure_response($response->get_data());
+            $authResponse = $server->respondToAccessTokenRequest(
+                $psrRequest,
+                $psrResponse
+            );
+        } catch (InvalidCredentials $exception) {
+            $authResponse = $exception->generateHttpResponse(
+                $psrResponse
+            );
+        } catch (OAuthServerException $exception) {
+            $authResponse = $exception->generateHttpResponse(
+                $psrResponse
+            );
+        } catch (Exception $exception) {
+            $authResponse = new WP_REST_Response(
+                [
+                    'message' => $exception->getMessage(),
+                    'code' => 'oauth_exception'
+                ],
+                500
+            );
+        }
+
+        return rest_ensure_response($authResponse);
     }
 }

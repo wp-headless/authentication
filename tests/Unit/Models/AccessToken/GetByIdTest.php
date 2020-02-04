@@ -5,9 +5,9 @@ namespace Tests\Unit\Models\AccessToken;
 use WPHeadless\Auth\Models\AccessToken;
 use Tests\Fixtures;
 
-class RevokedTest extends \Tests\TestCase
+class GetByIdTest extends \Tests\TestCase
 {
-    public function test_it_can_revoke_itself()
+    public function test_it_can_return_token_by_id()
     {
         Fixtures\AccessToken::create([
             'id' => 'mock-token-id'
@@ -15,12 +15,8 @@ class RevokedTest extends \Tests\TestCase
 
         $token = AccessToken::getById('mock-token-id');
 
-        $this->assertFalse($token->isRevoked());
+        $this->assertEquals($token->getIdentifier(), 'mock-token-id');
 
-        $token->revoke();
-
-        $token = AccessToken::getById('mock-token-id');
-
-        $this->assertTrue($token->isRevoked());
+        $this->assertInstanceOf(AccessToken::class, $token);
     }
 }

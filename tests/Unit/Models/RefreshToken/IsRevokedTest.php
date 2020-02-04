@@ -3,13 +3,10 @@
 namespace Tests\Unit\Models\RefreshToken;
 
 use Carbon\Carbon;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Models\RefreshToken;
 
 class IsRevokedTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-    
     public function test_it_returns_true_if_revoked()
     {
         $now = Carbon::now()->setMicroseconds(0);

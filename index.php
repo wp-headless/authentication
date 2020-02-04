@@ -3,7 +3,7 @@
 /**
  * Plugin Name: JWT Auth
  * Version: 0.1.0
- * Plugin URI: https://github.com/wp-headless/jwt-auth
+ * Plugin URI: https://github.com/wp-headless/auth
  * Description: JWT authentication layer for Wordpress REST API
  * Author: Andrew McLagan
  *
@@ -24,9 +24,9 @@ $database = new \WPHeadless\Auth\Services\Database;
 
 $passwordClient = new \WPHeadless\Auth\Services\PasswordClient; 
 
-$GLOBALS['jwt-auth'] = new \WPHeadless\Auth\Plugin($keys, $database, $passwordClient);
+$GLOBALS['oauth-plugin'] = new \WPHeadless\Auth\Plugin($keys, $database, $passwordClient);
 
-function jwtAuth(): \WPHeadless\Auth\Plugin
+function oAuth(): \WPHeadless\Auth\Plugin
 {
-    return $GLOBALS['jwt-auth'] ?? null;
+    return $GLOBALS['oauth-plugin'] ?? null;
 }

@@ -3,14 +3,11 @@
 namespace Tests\Unit\Repositories\AccessTokenRepository;
 
 use Tests\Fixtures;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Models\AccessToken;
 use WPHeadless\Auth\Repositories\AccessTokenRepository;
 
 class RevokeAccessTokenTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_can_revoke_tokens()
     {
         Fixtures\AccessToken::create([

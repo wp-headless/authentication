@@ -6,6 +6,7 @@ use WPHeadless\Auth\Auth;
 use WPHeadless\Auth\Config;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use WPHeadless\Auth\Repositories;
 use League\OAuth2\Server\CryptKey;
 use WPHeadless\Auth\Services\Keys;
@@ -16,9 +17,13 @@ class AuthServer
     {
         $server = $this->initServer();
 
-        $grant = $this->makePasswordGrant();
+        $passwordGrant = $this->makePasswordGrant();
 
-        $server->enableGrantType($grant, Auth::accessTokensExpireIn());
+        $server->enableGrantType($passwordGrant, Auth::accessTokensExpireIn());
+
+        $refreshTokenGrant = $this->makeRefreshTokenGrant();
+
+        $server->enableGrantType($refreshTokenGrant, Auth::accessTokensExpireIn());        
 
         return $server;
     }
@@ -36,6 +41,17 @@ class AuthServer
         return $grant;
     }
 
+    protected function makeRefreshTokenGrant(): RefreshTokenGrant
+    {
+        $refreshTokenRepo = new Repositories\RefreshTokenRepository;
+
+        $grant = new RefreshTokenGrant($refreshTokenRepo);
+
+        $grant->setRefreshTokenTTL(Auth::refreshTokensExpireIn());
+
+        return $grant;
+    }    
+
     protected function initServer(): AuthorizationServer
     {
         $encryptionKey = Keys::getEncryptionKey();
@@ -46,17 +62,10 @@ class AuthServer
 
         $scopeRepo = new Repositories\ScopeRepository;
 
-        $privateKey = $this->makeCryptKey('private');
+        $privateKey = Keys::makeKey('private');
 
         $server = new AuthorizationServer($clientRepo, $accessTokenRepo, $scopeRepo, $privateKey, $encryptionKey);
 
         return $server;
-    }
-
-    protected function makeCryptKey(string $type): CryptKey
-    {
-        $key = Keys::getKey($type);
-
-        return new CryptKey($key, null, false);
     }
 }

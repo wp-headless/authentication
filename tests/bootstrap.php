@@ -8,7 +8,10 @@ require_once getenv('WP_PHPUNIT__DIR') . '/includes/functions.php';
  * test set up, plugin activation, etc.
  */
 tests_add_filter('muplugins_loaded', function () {
+
     require dirname(__DIR__) . '/index.php';
+    
+    oAuth()->activate();
 });
 
 /**

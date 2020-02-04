@@ -22,10 +22,9 @@
         "firebase/php-jwt": "^5.0",
         "fzaninotto/faker": "^1.8",
         "illuminate/support": "^5.8",
-        "inpsyde/wpsr7": "^1.0",
         "league/oauth2-server": "^8.0",
         "papertower/wp-rest-api-psr7": "^0.8.0",
-        "paragonie/easydb": "^2",
+        "paragonie/easydb": "2.10.0",
         "phpseclib/phpseclib": "^2.0",
         "tightenco/collect": "^5.8"
     },
@@ -47,9 +46,12 @@
         }
     },
     "scripts": {
-        "post-update-cmd": "mkdir -p wordpress/wp-content/uploads"
+        "post-update-cmd": "mkdir -p wordpress/wp-content/uploads",
+        "post-install-cmd": "mkdir -p wordpress/wp-content/uploads"
     },
     "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
         "sort-packages": true
     },
     "minimum-stability": "dev",

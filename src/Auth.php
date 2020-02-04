@@ -21,7 +21,7 @@ class Auth
 
         return new DateInterval($interval);
     }
-    
+
     public static function decode(string $token): array
     {
         $publicKey = Keys::getKey('public');

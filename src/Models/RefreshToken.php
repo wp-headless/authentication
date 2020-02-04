@@ -9,9 +9,9 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
-class RefreshToken implements RefreshTokenEntityInterface, Contracts\Token
+class RefreshToken implements RefreshTokenEntityInterface, Contracts\Entity
 {
-    use RefreshTokenTrait, EntityTrait, Traits\Token;
+    use RefreshTokenTrait, EntityTrait, Traits\Entity;
 
     public function save(): void
     {
@@ -32,7 +32,7 @@ class RefreshToken implements RefreshTokenEntityInterface, Contracts\Token
         }
     }
 
-    public static function hydrate(array $row): Contracts\Token
+    public static function hydrate(array $row): Contracts\Entity
     {
         $token = new RefreshToken;
 

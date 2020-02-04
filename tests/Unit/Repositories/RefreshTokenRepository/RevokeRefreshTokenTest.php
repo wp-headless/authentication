@@ -3,14 +3,11 @@
 namespace Tests\Unit\Repositories\RefreshTokenRepository;
 
 use Tests\Fixtures;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Models\RefreshToken;
 use WPHeadless\Auth\Repositories\RefreshTokenRepository;
 
 class RevokeRefreshTokenTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_can_revoke_tokens()
     {
         Fixtures\RefreshToken::create([

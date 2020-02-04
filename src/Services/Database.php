@@ -38,7 +38,7 @@ class Database
                 $this->connection->run("DROP TABLE {$name};");
             }
         }
-    }    
+    }
 
     private static function getSchema(): array
     {
@@ -48,7 +48,7 @@ class Database
 
         return [
             static::getAccessTokenTable() => "
-                CREATE TABLE ".static::getAccessTokenTable()." (
+                CREATE TABLE " . static::getAccessTokenTable() . " (
                     id VARCHAR(100) NOT NULL,
                     user_id MEDIUMINT(9),
                     created_at DATETIME,
@@ -59,7 +59,7 @@ class Database
                 ) $collate;             
             ",
             static::getRefreshTokenTable() => "
-                CREATE TABLE ".static::getRefreshTokenTable()." (
+                CREATE TABLE " . static::getRefreshTokenTable() . " (
                     id VARCHAR(100) NOT NULL,
                     access_token_id VARCHAR(100) NOT NULL,
                     created_at DATETIME,
@@ -67,6 +67,21 @@ class Database
                     revoked_at DATETIME,
                     PRIMARY KEY (id),
                     INDEX access_token_id (access_token_id)
+                ) $collate;             
+            ",
+            static::getClientsTable() => "
+                CREATE TABLE " . static::getClientsTable() . " (
+                    id VARCHAR(100) NOT NULL,
+                    user_id MEDIUMINT(9),
+                    name VARCHAR(100),
+                    secret VARCHAR(100),
+                    redirect TEXT,
+                    personal_access_client TINYINT(1),
+                    password_client TINYINT(1),
+                    created_at DATETIME,
+                    revoked_at DATETIME,
+                    PRIMARY KEY (id),
+                    INDEX user_id (user_id)
                 ) $collate;             
             ",            
         ];
@@ -88,6 +103,15 @@ class Database
         $prefix = $wpdb->prefix;
 
         return "{$prefix}oauth_refresh_tokens";
+    }
+
+    public static function getClientsTable(): string
+    {
+        global $wpdb;
+
+        $prefix = $wpdb->prefix;
+
+        return "{$prefix}oauth_clients";
     }    
 
     public static function getTables(): array

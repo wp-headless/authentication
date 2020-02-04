@@ -4,10 +4,11 @@ namespace Tests\Fixtures;
 
 use Carbon\Carbon;
 use WPHeadless\Auth\Services\Database;
+use WPHeadless\Auth\Models\AccessToken as Token;
 
 class AccessToken
 {
-    public static function create(array $attributes = []): void
+    public static function create(array $attributes = []): Token
     {
         global $wpdb; 
 
@@ -24,6 +25,8 @@ class AccessToken
             'expires_at' => $dateTime,            
         ], $attributes);
 
-        $wpdb->insert($table, $data, $format);           
+        $wpdb->insert($table, $data, $format);    
+        
+        return Token::getById($data['id']);
     }
 }

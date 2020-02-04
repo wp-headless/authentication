@@ -4,14 +4,12 @@ namespace Tests\Unit;
 
 use DateInterval;
 use Carbon\Carbon;
-use WP_REST_Request;
 use WPHeadless\Auth\Auth;
-use Tests\ActivatesPlugin;
-use WPRestApi\PSR7\WP_REST_PSR7_Response;
-use WPHeadless\Auth\Factories;
+use Tests\ResetsPlugin;
+use Tests\Fixtures;
 class AuthTest extends \Tests\TestCase
 {
-    use ActivatesPlugin;
+    use ResetsPlugin;
 
     public function test_it_has_default_refresh_token_expiration()
     {
@@ -47,27 +45,17 @@ class AuthTest extends \Tests\TestCase
     
     public function test_it_can_decode_a_token()
     {
-        $userId = wp_insert_user([
-            'user_login' => 'barak.obama',
-            'user_email' => 'barak.obama@usa.gov',
-            'user_pass' => 'secret',
+        $userId = Fixtures\Users::create([
+            'user_login' => 'test.user',
+            'user_email' => 'test.user@wp.org',
+            'user_pass' => 'secret'
         ]);
 
-        $request = new WP_REST_Request('POST');
+        $jwt = Fixtures\Requests::accessToken('test.user', 'secret')
+            ->get_data()
+            ->access_token;
 
-        $request->set_param('username', 'barak.obama@usa.gov');
-
-        $request->set_param('password', 'secret');
-
-        $psrRequest = (new Factories\PasswordRequest)->create($request);
-
-        $server = (new Factories\AuthServer)->create();
-
-        $response = $server->respondToAccessTokenRequest($psrRequest, new WP_REST_PSR7_Response);  
-        
-        $token = $response->get_data()->access_token;
-
-        $decoded = Auth::decode($token);
+        $decoded = Auth::decode($jwt);
 
         $this->assertEquals($decoded['sub'], $userId);
         $this->assertEquals($decoded['aud'], '');
@@ -75,12 +63,6 @@ class AuthTest extends \Tests\TestCase
 
         $this->assertTrue(
             Carbon::createFromTimestamp($decoded['exp'])->gte(Carbon::now())
-        );
-
-        $this->assertTrue(
-            Carbon::createFromTimestamp($decoded['nbf'])->gte(
-                Carbon::now()->setMilliseconds(0)
-            )
-        );        
-    }            
+        );     
+    }
 }

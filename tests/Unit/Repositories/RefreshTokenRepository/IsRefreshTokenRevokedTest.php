@@ -4,13 +4,10 @@ namespace Tests\Unit\Repositories\RefreshTokenRepository;
 
 use Carbon\Carbon;
 use Tests\Fixtures;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Repositories\RefreshTokenRepository;
 
 class IsRefreshTokenRevokedTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_can_check_non_revoked_token()
     {
         Fixtures\RefreshToken::create([

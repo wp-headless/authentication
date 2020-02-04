@@ -2,14 +2,19 @@
 
 namespace Tests\Unit\Services\Keys;
 
+use Tests\ResetsPlugin;
 use Illuminate\Support\Str;
 use WPHeadless\Auth\Services\Keys;
 
 class KeyPairTest extends \Tests\TestCase
 {
+    use ResetsPlugin;
+
     public function test_it_can_genrate_key_files()
     {
         $service = new Keys;
+
+        $service->destroy(); // destroy current
 
         $service->generate();    
         

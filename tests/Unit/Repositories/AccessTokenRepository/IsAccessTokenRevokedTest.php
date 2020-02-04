@@ -4,13 +4,10 @@ namespace Tests\Unit\Repositories\AccessTokenRepository;
 
 use Carbon\Carbon;
 use Tests\Fixtures;
-use Tests\RefreshesDatabase;
 use WPHeadless\Auth\Repositories\AccessTokenRepository;
 
 class IsAccessTokenRevokedTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_can_check_non_revoked_token()
     {
         Fixtures\AccessToken::create([

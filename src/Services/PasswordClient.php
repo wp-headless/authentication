@@ -11,9 +11,9 @@ class PasswordClient
      */
     protected static $key = 'wp-headless:auth:pwc';
 
-    public static function getSecret(): string
+    public static function getSecret(): ?string
     {
-        return get_option(static::$key, '');
+        return get_option(static::$key, null);
     }       
 
     public function createSecret(): void

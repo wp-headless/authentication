@@ -5,6 +5,7 @@ namespace WPHeadless\Auth\Services;
 use WPHeadless\Auth\Config;
 use Illuminate\Support\Arr;
 use phpseclib\Crypt\RSA;
+use League\OAuth2\Server\CryptKey;
 
 class Keys
 {
@@ -37,9 +38,16 @@ class Keys
         return WPH_AUTH_PLUGIN_PATH . '/' . 'oauth-'.$type.'.key';
     }
 
-    public static function getEncryptionKey(): string
+    public static function makeKey(string $type): CryptKey
     {
-        return get_option(static::$encryptionKeyStore, '');
+        $key = static::getKey($type);
+
+        return new CryptKey($key, null, false);
+    }    
+
+    public static function getEncryptionKey(): ?string
+    {
+        return get_option(static::$encryptionKeyStore, null);
     }    
 
     public function generate(): void
@@ -51,9 +59,9 @@ class Keys
 
     public function destroy(): void
     {
-        unlink(static::keyPath('public'));
+        @unlink(static::keyPath('public'));
 
-        unlink(static::keyPath('private'));  
+        @unlink(static::keyPath('private'));  
 
         delete_option(static::$encryptionKeyStore);
     }    

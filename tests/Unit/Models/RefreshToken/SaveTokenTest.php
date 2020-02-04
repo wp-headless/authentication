@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Models\RefreshToken;
 
-use Tests\RefreshesDatabase;
 use Carbon\CarbonImmutable;
 use WPHeadless\Auth\Services\Database;
 use WPHeadless\Auth\Models\RefreshToken;
@@ -10,8 +9,6 @@ use WPHeadless\Auth\Models\AccessToken;
 
 class SaveTokenTest extends \Tests\TestCase
 {
-    use RefreshesDatabase;
-
     public function test_it_can_persist_to_the_db()
     {
         global $wpdb; 

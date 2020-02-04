@@ -31,6 +31,7 @@ $___WPConfig = [
     'WP_TESTS_EMAIL' => 'hello@example.com',
     'WP_TESTS_TITLE' => 'Test Blog',
     'WP_PHP_BINARY' => 'php',
+    'DISABLE_WP_CRON' => true,
     'WPLANG' => '',
 
     /*

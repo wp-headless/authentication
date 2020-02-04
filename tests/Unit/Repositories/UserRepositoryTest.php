@@ -3,6 +3,7 @@
 namespace Tests\Unit\Repositories;
 
 use Mockery;
+use WPHeadless\Auth\Exceptions\InvalidCredentials;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use WPHeadless\Auth\Repositories\UserRepository;
 
@@ -34,14 +35,14 @@ class UserRepositoryTest extends \Tests\TestCase
         $this->assertEquals($user->getIdentifier(), $userId);
     }    
 
-    public function test_it_returns_null_when_no_user_found()
+    public function test_it_returns_throws_when_no_user_found()
     {
+        $this->expectException(InvalidCredentials::class);
+
         $repository = new UserRepository;
 
         $client = Mockery::mock(ClientEntityInterface::class);
 
-        $user = $repository->getUserEntityByUserCredentials('homer_simpson', 'secret', '', $client);
-
-        $this->assertNull($user);
+        $repository->getUserEntityByUserCredentials('homer_simpson', 'secret', '', $client);
     }    
 }
